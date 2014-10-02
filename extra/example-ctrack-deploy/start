@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd /home/thomsonple_ts ;
+
+exec 0<&- ;
+exec 1<&- ;
+exec 2<&- ;
+
+sudo cp plpt /etc/rc.d/init.d ;
+sudo /sbin/chkconfig --add plpt ;
+sudo /sbin/chkconfig plpt on ;
+sudo /sbin/service plpt start ;

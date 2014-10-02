@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+
+. /home/thomsonple_ts/config.sh
+cd $BASEDIR
+
+exec 0<&-
+exec 1<&-
+exec 2<&-
+
+make_dst_lst () { # {{{
+	gunzip -c $DST_FILE_GZ > /tmp/plpt-start-dst-tmp
+	$RNDLINES_PATH /tmp/plpt-start-dst-tmp $DST_FILE $NUM_DESTINATIONS
+	rm -f /tmp/plpt-start-dst-tmp
+} # }}}
+
+mkdir -p $CTRACK_OUTDIR
+test -s $DST_FILE || make_dst_lst
+test -s $NN4_DATA || gunzip $NN4_DATA_GZ
+
+sudo $CTRACK_PATH -d $DST_FILE -i eth0 -l $CTRACK_PROBING_RATE \
+		-m $CTRACK_MIN_PROBE_PERIOD \
+		-M $CTRACK_MAX_PROBE_PERIOD \
+		-s $NN4_DATA \
+		-S $NN4_DATA_HORIZON \
+	   	-p $PARISTR_PATH \
+		-o $CTRACK_OUTDIR \
+		-R $CTRACK_PROBING_RATE_DUMP_PERIOD &

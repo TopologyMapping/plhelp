@@ -1,0 +1,53 @@
+#!/bin/bash
+# 
+# chkconfig: - 99 01
+# description: initializes plpt
+# config: /home/thomsonple_ts/none
+
+PATH=/sbin:/usr/sbin:$PATH ;
+
+start_script="/home/thomsonple_ts/plpt-start" ;
+stop_script="/home/thomsonple_ts/plpt-stop" ;
+prog_list="ctrack"
+
+usage ()
+{
+	echo "Usage: $0 {start|stop|restart|status}" 1>&2 ;
+}
+
+start ()
+{
+	$start_script
+}
+
+stop ()
+{
+	$stop_script
+}
+
+status ()
+{
+	for p in $prog_list ; do
+		if pgrep -f $p > /dev/null ; then
+			echo "$p is running" ;
+		else
+			echo "$p is not running" ;
+		fi ;
+	done
+}
+
+
+restart ()
+{
+	stop
+	start
+}
+
+case "$1" in
+    stop) stop ;;
+    status) status ;;
+    start|restart) restart ;;
+    *) usage ;;
+esac
+
+exit 0 ;

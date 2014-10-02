@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+int_targets="ctrack" ;
+
+for p in $int_targets ; do
+	sudo pkill -SIGINT $p
+done
+
+echo "dtrack can take a long time to shut down as it waits for pending"
+echo "measurements to complete."
